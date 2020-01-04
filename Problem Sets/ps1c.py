@@ -31,7 +31,6 @@ counter = 0
 low = 0
 high = 1
 
-
 savings_rate = 0
 amount_saved = 0
 # Bisection search to find the best savings rate
