@@ -38,7 +38,6 @@ def load_words():
     return wordlist
 
 
-
 def choose_word(wordlist):
     """
     wordlist (list): list of words (strings)
@@ -146,7 +145,6 @@ def hangman(secret_word):
     # JUST NEED TO IMPLEMENT WINNING CONDITION
     print("Welcome to the game Hangman!")
     
-
     #find the amount of unique letters
     unique_letters = []
     for l in word:
@@ -181,7 +179,6 @@ def hangman(secret_word):
             else:
                 print("Good guess:", get_guessed_word(word, letters_guessed))
             
-        
         # if they guessed something that wasn't a letter   
         elif guess not in string.ascii_lowercase:
             warnings -= 1
@@ -263,7 +260,6 @@ def match_with_gaps(my_word, other_word):
         while x < len(no_space_word):
             if no_space_word[x] != "_" and no_space_word[x] != other_word[x]:
                 wrong_letters += 1
-
             x += 1 
     else:
         return False
@@ -356,8 +352,6 @@ def hangman_with_hints(secret_word):
             else:
                 print("Good guess:", get_guessed_word(word, letters_guessed))
             
-            
-
         # if they guessed something that wasn't a letter   
         elif guess not in string.ascii_lowercase:
             # special character
@@ -391,6 +385,7 @@ def hangman_with_hints(secret_word):
                 print("Choosing an incorrect vowel costs you 2 guesses")
                 print(get_guessed_word(word, letters_guessed))
                 guesses -= 2
+                
         # guessing the same letter twice
         elif guess in letters_guessed:
             warnings -= 1
@@ -404,6 +399,7 @@ def hangman_with_hints(secret_word):
                 print("so you lose one guess:", get_guessed_word(word, letters_guessed))
                 warnings = 3
                 guesses -= 1
+                
         # still playing    
         if guesses > 0:
             print("---------------------")
