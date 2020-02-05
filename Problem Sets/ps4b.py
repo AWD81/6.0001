@@ -16,14 +16,12 @@ def load_words(file_name):
     Depending on the size of the word list, this function may
     take a while to finish.
     '''
-    print("Loading word list from file...")
     # inFile: file
     inFile = open(file_name, 'r')
     # wordlist: list of strings
     wordlist = []
     for line in inFile:
         wordlist.extend([word.lower() for word in line.split(' ')])
-    print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 def is_word(word_list, word):
@@ -158,17 +156,26 @@ class Message(object):
         '''
 
         let_map = self.build_shift_dict(shift)
+        alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
         message = ''
-        for l in self.message_text:
-            if l != ' ':
-                new_let = let_map[l]
-                message += new_let
+        for l in list(self.get_message_text()):
+            if len(l) > 1:
+                for c in l:
+                    if c in alphabet:
+                        new_let = let_map[c]
+                        message += new_let
+                    else:
+                        message += l
             else:
-                space = ' '
-                message += space
-
+                if l in alphabet:
+                    new_let = let_map[l]
+                    message += new_let
+                else:
+                    message += l
+        
         return message
+
 
 
 class PlaintextMessage(Message):
@@ -271,36 +278,44 @@ class CiphertextMessage(Message):
         spaces. Uppercase letters and special characters aren't allowed.
         '''
         message = ()
-
-        def get_num_words(words):
-            num_words = 0
-            for w in words:
-                if w in self.valid_words:
-                    num_words += 1
-    
-            return num_words
+        
+        def get_num_words(word):
+            if word in self.valid_words:
+                return 1
+            else:
+                return 0
 
         most_words = 0
         for s in range(0, 26):
+            if len(self.apply_shift(s).split()) > 1:
+                total_words = 0
+                for w in self.apply_shift(s).split():
+                    total_words += get_num_words(w)
+            else:
+                total_words = get_num_words(self.apply_shift(s).split()[0])
 
-            if get_num_words(self.apply_shift(s).split()) > most_words:
+            if total_words > most_words:
                 message = (s, self.apply_shift(s))
-
+                most_words = total_words
+                
+                
         return message
 
 # test code
 if __name__ == '__main__':
 
     #Example test case (PlaintextMessage)
-    plaintext = PlaintextMessage('hello', 2)
-    print('Expected Output: jgnnq')
-    print('Actual Output:', plaintext.get_message_text_encrypted())
-
+##    plaintext = PlaintextMessage('hello', 2)
+##    print('Expected Output: jgnnq')
+##    print('Actual Output:', plaintext.get_message_text_encrypted())
+##
     #Example test case (CiphertextMessage)
-    ciphertext = CiphertextMessage('jgnnq')
-    print('Expected Output:', (24, 'hello'))
-    print('Actual Output:', ciphertext.decrypt_message())
+    #ciphertext = CiphertextMessage('jgnnq')
+    #print('Expected Output:', (24, 'hello'))
+    #print('Actual Output:', ciphertext.decrypt_message())
 
     #TODO: WRITE YOUR TEST CASES HERE
-
     #TODO: best shift value and unencrypted story 
+    cipher_text = CiphertextMessage(get_story_string())
+
+    print(cipher_text.decrypt_message())
